@@ -2,25 +2,26 @@ import React, { useState } from 'react'
 import AddPlayer from './components/AddPlayer'
 import DisplayPlayers from './components/DisplayPlayers'
 import EditPlayer from './components/EditPlayer'
+import './App.css'
 
 const App = () => {
   const [editing, setEditing] = useState(false)
   const [playerToEdit, setPlayerToEdit] = useState()
   const [players, setPlayers] = useState([
     {
-      id: 1, name: 'Cristiano Ronaldo', club: 'Manchester United'
+      id: 1, name: 'Cristiano Ronaldo', club: 'Manchester United', important: true
     },
     {
-      id: 2, name: 'Lionel Messi', club: 'Paris Saint Germain'
+      id: 2, name: 'Lionel Messi', club: 'Paris Saint Germain', important: false
     },
     {
-      id: 3, name: 'Didier Drogba', club: 'Chelsea'
+      id: 3, name: 'Didier Drogba', club: 'Chelsea', important: true
     },
     {
-      id: 4, name: 'Robert Lewandowski', club: 'Barcelona'
+      id: 4, name: 'Robert Lewandowski', club: 'Barcelona', important: false
     },
     {
-      id: 5, name: 'Toni Kroos', club: 'Real Madrid'
+      id: 5, name: 'Toni Kroos', club: 'Real Madrid', important: true
     },
   ])
 
@@ -43,6 +44,18 @@ const App = () => {
     setEditing(false)
   }
 
+  const toggle = playerId => {
+    let i = 0
+    const temp = [...players]
+
+    players.forEach((player, index) => {
+      if (player.id === playerId) i = index
+    })
+
+    temp[i].important = !temp[i].important
+    setPlayers(temp)
+  }
+
   return (
     <div>
       <h1>Football database</h1>
@@ -63,7 +76,12 @@ const App = () => {
             />
           )
       }
-      <DisplayPlayers players={players} deletePlayer={deletePlayer} whichPlayerToEdit={whichPlayerToEdit} />
+      <DisplayPlayers
+        players={players}
+        deletePlayer={deletePlayer}
+        whichPlayerToEdit={whichPlayerToEdit}
+        toggle={toggle}
+      />
     </div>
   )
 }
