@@ -56,6 +56,38 @@ const App = () => {
     setPlayers(temp)
   }
 
+  const toggleAll = () => {
+    let allTrue = players.map(player => {
+      return {
+        id: player.id,
+        name: player.name,
+        club: player.club,
+        important: true
+      }
+    })
+
+    let allFalse = players.map(player => {
+      return {
+        id: player.id,
+        name: player.name,
+        club: player.club,
+        important: false
+      }
+    })
+
+    let helper = 0
+
+    players.forEach(player => {
+      if (player.important === true) helper += 1
+    })
+
+    if (helper === players.length) {
+      setPlayers(allFalse)
+    } else {
+      setPlayers(allTrue)
+    }
+  }
+
   return (
     <div>
       <h1>Football database</h1>
@@ -81,6 +113,7 @@ const App = () => {
         deletePlayer={deletePlayer}
         whichPlayerToEdit={whichPlayerToEdit}
         toggle={toggle}
+        toggleAll={toggleAll}
       />
     </div>
   )

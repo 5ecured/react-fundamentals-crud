@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DisplayPlayers = ({ players, deletePlayer, whichPlayerToEdit, toggle }) => {
+const DisplayPlayers = ({ players, deletePlayer, whichPlayerToEdit, toggle, toggleAll }) => {
     let display = players.map(player => {
         return (
             <tr>
@@ -41,6 +41,10 @@ const DisplayPlayers = ({ players, deletePlayer, whichPlayerToEdit, toggle }) =>
         return (
             <>
                 <h2>List of players:</h2>
+                <button onClick={toggleAll}>Toggle all</button>
+                <br />
+                <br />
+                <br />
                 <table>
                     <tr>
                         <th>ID</th>
