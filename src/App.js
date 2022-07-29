@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import AddPlayer from './components/AddPlayer'
 import DisplayPlayers from './components/DisplayPlayers'
+import FilteredPlayers from './components/FilteredPlayers'
 import EditPlayer from './components/EditPlayer'
 import './App.css'
 
 const App = () => {
+  const [allPlayersImportant, setAllPlayersImportant] = useState(false)
+  const [showAll, setShowAll] = useState(true)
+  const [filteredPlayer, setFilteredPlayer] = useState('')
   const [editing, setEditing] = useState(false)
   const [playerToEdit, setPlayerToEdit] = useState()
   const [players, setPlayers] = useState([
@@ -57,6 +61,12 @@ const App = () => {
   }
 
   const toggleAll = () => {
+    let helper = 0
+
+    players.forEach(player => {
+      if (player.important === true) helper += 1
+    })
+
     let allTrue = players.map(player => {
       return {
         id: player.id,
@@ -75,23 +85,36 @@ const App = () => {
       }
     })
 
-    let helper = 0
-
-    players.forEach(player => {
-      if (player.important === true) helper += 1
-    })
-
     if (helper === players.length) {
       setPlayers(allFalse)
+      /* 
+      setAllPlayersImportant is needed in Display and Filtered to display the text of the button, whether to say 
+      'Make all players not important' or 'Make all players important'
+      */
+      setAllPlayersImportant(false)
     } else {
       setPlayers(allTrue)
+      /* 
+      setAllPlayersImportant is needed in Display and Filtered to display the text of the button, whether to say 
+      'Make all players not important' or 'Make all players important'
+      */
+      setAllPlayersImportant(true)
     }
   }
+
+  let toShow = showAll ? players : players.filter(player => player.important)
 
   return (
     <div>
       <h1>Football database</h1>
       <hr />
+      <h2>Filter players</h2>
+      <input
+        placeholder='Filter players by name'
+        onChange={e => setFilteredPlayer(e.target.value)}
+        value={filteredPlayer}
+      />
+      <button onClick={() => setFilteredPlayer('')}>Clear filter</button>
       {
         editing ?
           (
@@ -108,13 +131,32 @@ const App = () => {
             />
           )
       }
-      <DisplayPlayers
-        players={players}
-        deletePlayer={deletePlayer}
-        whichPlayerToEdit={whichPlayerToEdit}
-        toggle={toggle}
-        toggleAll={toggleAll}
-      />
+      {
+        filteredPlayer.length > 0 ? (
+          <FilteredPlayers
+            toShow={toShow}
+            deletePlayer={deletePlayer}
+            whichPlayerToEdit={whichPlayerToEdit}
+            toggle={toggle}
+            toggleAll={toggleAll}
+            filteredPlayer={filteredPlayer}
+            setShowAll={setShowAll}
+            showAll={showAll}
+            allPlayersImportant={allPlayersImportant}
+          />
+        ) : (
+          <DisplayPlayers
+            toShow={toShow}
+            deletePlayer={deletePlayer}
+            whichPlayerToEdit={whichPlayerToEdit}
+            toggle={toggle}
+            toggleAll={toggleAll}
+            setShowAll={setShowAll}
+            showAll={showAll}
+            allPlayersImportant={allPlayersImportant}
+          />
+        )
+      }
     </div>
   )
 }

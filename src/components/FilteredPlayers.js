@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react'
 
-const DisplayPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, toggleAll, setShowAll, showAll, allPlayersImportant }) => {
+const FilteredPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, toggleAll, filteredPlayer, setShowAll, showAll, allPlayersImportant }) => {
     const [numberOfPlayers, setNumberOfPlayers] = useState(0)
 
+
+
+
+    let filteredPlayers = toShow.filter(player => {
+        return (
+            player.name.toUpperCase().includes(filteredPlayer.toUpperCase()) ||
+            player.name.toLowerCase().includes(filteredPlayer.toLowerCase())
+        )
+    })
+
+
     useEffect(() => {
-        setNumberOfPlayers(toShow.length)
-    }, [toShow.length])
+        setNumberOfPlayers(filteredPlayers.length)
+    }, [filteredPlayers.length])
+    
 
-
-
-    let display = toShow.map(player => {
+    let display = filteredPlayers.map(player => {
         return (
             <tr style={{ backgroundColor: player.important ? 'lightgreen' : '' }}>
                 <td key={player.id}>
@@ -38,7 +48,7 @@ const DisplayPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, toggl
     if (toShow.length > 0) {
         return (
             <>
-                <h2>List of players ({numberOfPlayers})</h2>
+                <h2>Filtered players ({numberOfPlayers})</h2>
                 <button onClick={toggleAll}>
                     {allPlayersImportant ? 'Make all players not important' : 'Make all players important'}
                 </button>
@@ -84,4 +94,4 @@ const DisplayPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, toggl
 
 }
 
-export default DisplayPlayers
+export default FilteredPlayers
