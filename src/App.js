@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AddPlayer from './components/AddPlayer'
 import DisplayPlayers from './components/DisplayPlayers'
 import FilteredPlayers from './components/FilteredPlayers'
 import EditPlayer from './components/EditPlayer'
 import './App.css'
+import Services from './services/players'
 
 const App = () => {
   const [allPlayersImportant, setAllPlayersImportant] = useState(false)
@@ -11,31 +12,42 @@ const App = () => {
   const [filteredPlayer, setFilteredPlayer] = useState('')
   const [editing, setEditing] = useState(false)
   const [playerToEdit, setPlayerToEdit] = useState()
-  const [players, setPlayers] = useState([
-    {
-      id: 1, name: 'Cristiano Ronaldo', club: 'Manchester United', important: true
-    },
-    {
-      id: 2, name: 'Lionel Messi', club: 'Paris Saint Germain', important: false
-    },
-    {
-      id: 3, name: 'Didier Drogba', club: 'Chelsea', important: true
-    },
-    {
-      id: 4, name: 'Robert Lewandowski', club: 'Barcelona', important: false
-    },
-    {
-      id: 5, name: 'Toni Kroos', club: 'Real Madrid', important: true
-    },
-  ])
+  const [players, setPlayers] = useState([])
+  //   {
+  //     id: 1, name: 'Cristiano Ronaldo', club: 'Manchester United', important: true
+  //   },
+  //   {
+  //     id: 2, name: 'Lionel Messi', club: 'Paris Saint Germain', important: false
+  //   },
+  //   {
+  //     id: 3, name: 'Didier Drogba', club: 'Chelsea', important: true
+  //   },
+  //   {
+  //     id: 4, name: 'Robert Lewandowski', club: 'Barcelona', important: false
+  //   },
+  //   {
+  //     id: 5, name: 'Toni Kroos', club: 'Real Madrid', important: true
+  //   },
+  // ]
 
-  const addPlayer = obj => {
-    obj.id = players.length + 1
-    setPlayers([...players, obj])
+  useEffect(() => {
+    Services.getService().then(data => {
+      setPlayers(data)
+    })
+  }, [])
+
+  const addPlayer = async obj => {
+    // obj.id = players.length + 1
+    // setPlayers([...players, obj])
+
+    const data = await Services.addService(obj)
+    setPlayers(players.concat(data))
   }
 
-  const deletePlayer = id => {
-    setPlayers(players.filter(player => player.id !== id))
+  const deletePlayer = async id => {
+    // setPlayers(players.filter(player => player._id !== id))
+    setPlayers(players.filter(player => player._id !== id))
+    await Services.deleteService(id)
   }
 
   const whichPlayerToEdit = playerObjectToEdit => {
@@ -43,29 +55,41 @@ const App = () => {
     setPlayerToEdit(playerObjectToEdit)
   }
 
-  const editPlayer = (id, updatedPlayer) => {
-    setPlayers(players.map(player => player.id === id ? updatedPlayer : player))
+  const editPlayer = async (id, updatedPlayer) => {
+    // setPlayers(players.map(player => player.id === id ? updatedPlayer : player))
+    // setEditing(false)
+    const data = await Services.editService(id, updatedPlayer)
+    setPlayers(players.map(player => player._id === id ? data : player))
     setEditing(false)
   }
 
-  const toggle = playerId => {
-    let i = 0
-    const temp = [...players]
+  const toggle = async (playerId, obj) => {
+    // let i = 0
+    // const temp = [...players]
 
-    players.forEach((player, index) => {
-      if (player.id === playerId) i = index
-    })
+    // players.forEach((player, index) => {
+    //   if (player.id === playerId) i = index
+    // })
 
-    temp[i].important = !temp[i].important
-    setPlayers(temp)
+    // temp[i].important = !temp[i].important
+    // setPlayers(temp)
+
+    const data = await Services.toggleService(playerId, obj)
+    setPlayers(players.map(player => player._id === playerId ? data : player))
   }
 
-  const toggleAll = () => {
+  const checkAllPlayersImportant = array => {
     let helper = 0
 
-    players.forEach(player => {
-      if (player.important === true) helper += 1
+    array.forEach(player => {
+      if (player.important) helper += 1
     })
+
+    return helper
+  }
+
+  const toggleAll = async () => {
+    let helper = checkAllPlayersImportant(players)
 
     let allTrue = players.map(player => {
       return {
@@ -100,13 +124,15 @@ const App = () => {
       */
       setAllPlayersImportant(true)
     }
+
+    await Services.toggleAllService()
   }
 
   let toShow = showAll ? players : players.filter(player => player.important)
 
   return (
     <div>
-      <h1>Football database</h1>
+      <h1>Football database with real, working MongoDB database!</h1>
       <hr />
       <h2>Filter players</h2>
       <input

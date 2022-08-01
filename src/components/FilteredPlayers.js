@@ -17,14 +17,14 @@ const FilteredPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, togg
     useEffect(() => {
         setNumberOfPlayers(filteredPlayers.length)
     }, [filteredPlayers.length])
-    
+
 
     let display = filteredPlayers.map(player => {
         return (
-            <tr style={{ backgroundColor: player.important ? 'lightgreen' : '' }}>
-                <td key={player.id}>
+            <tr key={player.id} style={{ backgroundColor: player.important ? 'lightgreen' : '' }}>
+                {/* <td>
                     {player.id}
-                </td>
+                </td> */}
                 <td>
                     {player.name}
                 </td>
@@ -54,10 +54,13 @@ const FilteredPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, togg
                 </button>
                 <br />
                 <br />
+                <br />
+                <br />
                 <button onClick={() => setShowAll(!showAll)}>
                     {showAll ? 'Show important players' : 'Show all players'}
                 </button>
-                {'  '}
+                <br />
+                <br />
                 <span style={{ fontWeight: 'bolder' }}>
                     {`Currently showing ${showAll ? 'all' : 'important'} players`}
                 </span>
@@ -66,7 +69,7 @@ const FilteredPlayers = ({ toShow, deletePlayer, whichPlayerToEdit, toggle, togg
                 <br />
                 <table>
                     <tr>
-                        <th>ID</th>
+                        {/* <th>ID</th> */}
                         <th>NAME</th>
                         <th>CLUB</th>
                         <th>IMPORTANT</th>

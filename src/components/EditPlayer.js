@@ -15,7 +15,7 @@ const EditPlayer = ({ playerToEdit, editPlayer, setEditing }) => {
   const handleSubmit = e => {
     e.preventDefault()
     if (!playerObj.name || !playerObj.club) return
-    editPlayer(playerObj.id, playerObj)
+    editPlayer(playerObj._id, playerObj)
   }
 
 

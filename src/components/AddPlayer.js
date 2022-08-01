@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 const AddPlayer = ({ addPlayer }) => {
-    const initialPlayer = { id: null, name: '', club: '' }
+    const initialPlayer = { id: null, name: '', club: '', important: false }
     const [newPlayer, setNewPlayer] = useState(initialPlayer)
 
     const handleChange = e => {
